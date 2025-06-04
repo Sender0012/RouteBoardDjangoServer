@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Moje trasy</h2>
+<ul>
+  {% for route in routes %}
+    <li><a href="{% url 'route_detail' route.id %}">{{ route.name }}</a></li>
+  {% empty %}
+    <li>Brak tras.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

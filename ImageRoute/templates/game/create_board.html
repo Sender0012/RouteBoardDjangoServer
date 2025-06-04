@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>{% if form.instance.pk %}Edytuj{% else %}Nowa{% endif %} plansza</h1>
+<form id="boardForm" method="post">
+  {% csrf_token %}
+  <div>
+  {{ form.title.label_tag }} {{ form.title }}
+  </div><br>
+  <div>
+  {{ form.rows.label_tag }} {{ form.rows }}
+  </div><br>
+  <div>
+  {{ form.cols.label_tag }} {{ form.cols }}
+  </div><br>
+    {{ form.dots }} {#This renders as a hidden input#}
+  <button type="button" id="generateGrid">Generuj siatkę</button><br>
+  <input type="color" id="colorPicker"><br>
+  <div id="gridContainer"></div><br>
+  <button type="button" id="saveBoard">Zapisz</button>
+</form>
+<script src="{% static 'js/dist/new_gameboard.js' %}"></script>
+<script>
+  // Przekazanie początkowych kropek do TS
+  const initialDots = {{ initial_dots|default:'[]'|safe }};
+</script>
+{% endblock %}
+
+{% block extra_css %}
+   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}

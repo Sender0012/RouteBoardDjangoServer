@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Moje plansze</h1>
+<table>
+  <tr><th>Tytuł</th><th>Wymiary</th><th>Akcje</th></tr>
+  {% for b in boards %}
+  <tr>
+    <td>{{ b.title }}</td>
+    <td>{{ b.rows }}×{{ b.cols }}</td>
+    <td>
+      <a href="{% url 'gameboard_update' b.pk %}">Edytuj</a>
+<!--      <form action="{% url 'gameboard_delete' b.pk %}" method="post" style="display:inline;">{% csrf_token %}<button>Usuń</button></form>-->
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="{% url 'gameboard_create' %}">Nowa plansza</a>
+{% endblock %}

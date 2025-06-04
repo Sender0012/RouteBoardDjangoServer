@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Edytuj ścieżkę: {{ board.title }}</h2>
+
+<form method="post" id="pathForm">
+  {% csrf_token %}
+  <input type="hidden" name="lines" id="linesInput">
+
+  <div id="gridContainer"></div>
+
+  <button type="submit">Zapisz ścieżkę</button>
+</form>
+
+<script>
+  const initialLines = {{ initial_lines|safe }};
+  const boardRows = {{ board.rows }};
+  const boardCols = {{ board.cols }};
+</script>
+<script src="{% static 'js/dist/edit_path.js' %}"></script>

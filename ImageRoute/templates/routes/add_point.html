@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>Dodaj punkt do trasy: {{ route.name }}</h2>
+
+
+<div style="position: relative; display: inline-block;">
+  <img id="background-image" src="{{ route.background.image.url }}" alt="Mapa" width="600" style="cursor: crosshair;">
+  <canvas id="click-canvas" width="600" height="auto"
+          style="position: absolute; left: 0; top: 0; pointer-events: none;"></canvas>
+</div>
+
+<form method="post" id="point-form">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Dodaj punkt</button>
+</form>
+
+<script src="{% static 'js/addPointClick.js' %}"></script>
+<script>
+  console.log('addPointClick.js loaded');
+</script>
+{% endblock %}

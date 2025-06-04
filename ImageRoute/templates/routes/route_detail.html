@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h2>Trasa: {{ route.name }}</h2>
+
+<div style="position: relative; display: inline-block;">
+    <!-- Obraz tła -->
+    <img id="background-image" src="{{ background.image.url }}" alt="Mapa" width="600">
+
+    <!-- Nakładka canvas do rysowania punktów i linii -->
+    <canvas id="route-canvas" width="600" height="auto"
+            style="position: absolute; left: 0; top: 0; pointer-events: none;"></canvas>
+</div>
+
+<br><br>
+<a href="{% url 'add_point' route.id %}">Dodaj punkt</a>
+
+<h3>Punkty:</h3>
+<ul id="points-list">
+  {% for point in points %}
+    <li data-x="{{ point.x }}" data-y="{{ point.y }}" class="point-item" style="cursor:pointer;">
+      [{{ point.x }}, {{ point.y }}]
+      <form action="{% url 'delete_point' route.id point.id %}" method="post" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit">Usuń</button>
+      </form>
+    </li>
+  {% empty %}
+    <li>Brak punktów.</li>
+  {% endfor %}
+</ul>
+
+<!-- Załaduj pliki JavaScript -->
+<script src="{% static 'js/drawRoute.js' %}"></script>
+<script src="{% static 'js/highlightPoint.js' %}"></script>
+
+<script>
+  const points = [
+    {% for point in points %}
+      {x: {{ point.x }}, y: {{ point.y }}},
+    {% endfor %}
+  ];
+  drawRoute(points, 'background-image', 'route-canvas');
+</script>
+
+{% endblock %}
