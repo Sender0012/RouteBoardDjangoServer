@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .models import Route, RoutePoint, BackgroundImage, GameBoard, Path
 from .forms import RegisterForm, RouteForm, RoutePointForm, GameBoardForm
+from django.http import StreamingHttpResponse
+from .sse import clients, event_stream, broadcast
+from queue import Queue
 import json
 
 # --- Rejestracja ---
@@ -91,6 +94,7 @@ def gameboard_create(request):
             board.user = request.user
             board.dots = json.loads(request.POST.get('dots', '[]'))
             board.save()
+
             boards = GameBoard.objects.all()
             return render(request, 'game/gameboard_list.html', {'boards': boards})
         return JsonResponse({'success': False, 'error': form.errors.as_json()})
@@ -125,19 +129,19 @@ def gameboard_delete(request, pk):
         board.delete()
         return redirect('gameboard_list')
     return render(request, 'game/gameboard_confirm_delete.html', {'board': board})
-# def create_board_view(request):
-#     return render(request, 'game/create_board.html')
 
-# @require_POST
-# @login_required()
-# def save_board_view(request):
-#     data = json.loads(request.body)
-#     board = GameBoard.objects.create(
-#         user=request.user,
-#         title=data['title'],
-#         rows=data['rows'],
-#         cols=data['cols']
-#     )
-#     dots = [Dot(board=board, row=dot['row'], col=dot['col'], color=dot['color']) for dot in data['dots']]
-#     Dot.objects.bulk_create(dots)
-#     return JsonResponse({'status': 'ok'})
+# SEE
+
+def sse_notifications(request):
+    # utworzenie nowej kolejki dla tego klienta
+    q = Queue()
+    clients.append(q)
+
+    # StreamingHttpResponse z odpowiednimi nagłówkami
+    response = StreamingHttpResponse(
+        event_stream(q),
+        content_type='text/event-stream'
+    )
+    response['Cache-Control'] = 'no-cache'
+    response['X-Accel-Buffering'] = 'no'  # dla nginx, by nie buforował
+    return response

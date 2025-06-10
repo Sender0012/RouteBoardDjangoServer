@@ -76,5 +76,5 @@ if (typeof initialDots !== "undefined") {
         }
     });
 }
-export {};
+//export {};
 //# sourceMappingURL=new_gameboard.js.map

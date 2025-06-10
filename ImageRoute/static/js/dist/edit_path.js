@@ -208,5 +208,4 @@ form.addEventListener("submit", () => {
 // INITIALIZE
 populateColorSelector();
 drawGridAndLines();
-//export {};
 //# sourceMappingURL=edit_path.js.map

@@ -2,7 +2,9 @@
 <html>
 <head>
   <title>Trasy</title>
-   {% block extra_css %}{% endblock %}
+  {% load static %}
+  {% block extra_css %}{% endblock %}
+  <link rel="stylesheet" href="{% static 'css/toast.css' %}">
 </head>
 <body>
   <nav>
@@ -24,5 +26,6 @@
   </nav>
   <hr>
   {% block content %}{% endblock %}
+  <script src="{% static 'js/dist/notifications.js' %}"></script>
 </body>
 </html>
